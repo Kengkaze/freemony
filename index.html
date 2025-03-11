@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: white;
+            transition: background 1s;
+        }
+        #virus-container {
+            display: none;
+        }
+        .progress-bar {
+            width: 80%;
+            height: 30px;
+            background-color: gray;
+            margin: 20px auto;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: dodgerblue; /* เปลี่ยนเป็นสีฟ้า */
+            transition: width 5s;
+        }
+    </style>
+</head>
+<body>
+    <h1>กดปุ่มนี้ดูสิ</h1>
+    <button onclick="startVirus()">กดเลย!</button>
+
+    <div id="virus-container">
+        <h2 style="color: red;">⚠ โทรศัพท์มึงโดนกุแฮก!</h2>
+        <p>กำลังลบข้อมูลทั้งหมด...</p>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        function startVirus() {
+            document.body.style.backgroundColor = "red"; // เปลี่ยนจอเป็นสีแดง
+            document.body.innerHTML = ""; // เคลียร์หน้าจอ (ทำให้ดูเหมือนค้าง)
+
+            // ทำให้มือถือสั่น (ถ้ารองรับ)
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 300, 500, 300, 1000]); // สั่นเป็นจังหวะ
+            }
+
+            setTimeout(() => {
+                document.body.innerHTML = '<h2 style="color: yellow; text-align: center;">⚠ โทรศัพท์มึงโดนกุแฮก!</h2>';
+                document.body.innerHTML += '<p style="text-align: center;">กำลังลบข้อมูลทั้งหมด...</p>';
+                
+                // Progress Bar
+                let progressBar = document.createElement("div");
+                progressBar.className = "progress-bar";
+                let progress = document.createElement("div");
+                progress.className = "progress";
+                progressBar.appendChild(progress);
+                document.body.appendChild(progressBar);
+                progressBar.style.display = "block";
+
+                setTimeout(() => {
+                    progress.style.width = "100%"; // ให้ Progress Bar วิ่งเต็ม
+                }, 500);
+
+                // ป้องกันปิด (ปิดปุ่ม Back & Home)
+                history.pushState(null, null, location.href);
+                window.onpopstate = function () {
+                    history.go(1);
+                };
+
+                // ผ่านไป 10 วินาที เฉลยว่าโดนแกล้ง
+                setTimeout(() => {
+                    document.body.innerHTML = '<h1>ว้ายโดนเกรียน55555 🤣</h1><p>โดนหลอกจากสแกมเมอร์อินเดีย!</p>';
+                    window.onpopstate = null; // คืนค่าการใช้งานปุ่ม Back
+                }, 10000);
+
+            }, 2000); // หน่วง 2 วินาที ให้จอดำก่อน
+        }
+    </script>
+</body>
+</html>
